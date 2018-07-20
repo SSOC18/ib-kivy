@@ -3,9 +3,15 @@
 
 ## Requirements
 
+Software
 - Interactive Brokers Trader Working Station (IB TWS)
 - TWS API
 - python 3
 - kivy
 
+Hardware
+- anything larger than AWS EC2 t2.small
 
+Development tools
+- pipenv
+- sourcetree for Microsoft Windows
