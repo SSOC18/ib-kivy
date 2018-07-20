@@ -1,6 +1,7 @@
 # ib-kivy
 [kivy](https://kivy.org/) GUI application wrapping Interactive Brokers' [TWS API](http://interactivebrokers.github.io/tws-api/) to show market data
 
+
 ## Requirements
 
 Software
@@ -12,6 +13,6 @@ Software
 Hardware
 - anything larger than AWS EC2 t2.small
 
-Development tools
+Optional tools
 - pipenv
-- sourcetree for Microsoft Windows
+- git
