@@ -1,0 +1,43 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "d55126c5006a595ceed521fe54e74d65d3c882b0bea6eaa7e443962a25402704"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "ibapi-grease": {
+            "hashes": [
+                "sha256:a2b5291866a53312076161fba4a9f3d0d795ff76097838aa963b9dd6bdc2e65a",
+                "sha256:b04b7dcb139135fc6c70b932da556c20b8f814369fbc457b25f892bb7a7ade1a"
+            ],
+            "version": "==0.2.0"
+        },
+        "ibpy2": {
+            "hashes": [
+                "sha256:f0f401734bfa2573f9f5bae212ce8d2a48b6779bd153dd11e7603a34f4fcfd7c"
+            ],
+            "index": "pypi",
+            "version": "==0.8.0"
+        },
+        "ibpythonic": {
+            "hashes": [
+                "sha256:093f2b5823178ee5ebb0bd239c29179f2bb0e71e5051da3cc67ca9e1b9072651",
+                "sha256:868bc1d4b195f3b3b5e15131da6b6d6c01a6d160e9ca906d89855a0ff0ac4fd6"
+            ],
+            "index": "pypi",
+            "version": "==0.1.2"
+        }
+    },
+    "develop": {}
+}
