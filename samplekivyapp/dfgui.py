@@ -19,10 +19,10 @@ from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.backends.backend_wx import NavigationToolbar2Wx
 from matplotlib.figure import Figure
 from bisect import bisect
-
+import rethinkdb as r
 import numpy as np
 import pandas as pd
-
+import random
 # unused import required to allow 'eval' of date filters
 import datetime
 from datetime import date
@@ -262,6 +262,7 @@ class DataframePanel(wx.Panel):
     """
     Panel providing the main data frame table view.
     """
+
     def __init__(self, parent, df, status_bar_callback):
         wx.Panel.__init__(self, parent)
 
@@ -278,39 +279,81 @@ class MainFrame(wx.Frame):
     """
     The main GUI window.
     """
-    def __init__(self, df1, df2, df3):
-        wx.Frame.__init__(self, None, -1, "Pandas DataFrame GUI")
+    def __init__(self):
         
+        # finally, put the notebook in a sizer for the panel to manage
+        # the layout
+        
+        
+        self.timer()
+
+
+        
+        
+
+    def timer(self):
         # Here we create a panel and a notebook on the panel
+        wx.Frame.__init__(self, None, -1, "Pandas DataFrame GUI")
+        self.CreateStatusBar(2, style=0)
+        self.SetStatusWidths([200, -1])
+        self.SetSize((800, 600))
+        self.Center()
+
+
         p = wx.Panel(self)
         nb = wx.Notebook(p)
         self.nb = nb
-        self.CreateStatusBar(2, style=0)
-        self.SetStatusWidths([200, -1])
+
+        conn = r.connect(host='localhost', port=28015, db='python_tutorial')
+        cursor = r.table("csvfile").pluck("name", "price").run(conn)
+        res = []
+        for document in cursor:
+            res.append(document)
+
+        
+            
+        s=str(random.randint(0, 100))
+        df1 = pd.read_csv("/Users/raedzorkot/Desktop/pythontestodes/Workbook1.csv")
+        df2= pd.DataFrame({'symbol': ['a','b','c'], 'position': [s,2,3]})
+        df3 = pd.DataFrame({'symbol': ['a','b','c'], 'qty': [1, -1, 0]})
+        df4 = pd.DataFrame(res);
+
+        
         
         # create the page windows as children of the notebook
         self.page1 = DataframePanel(nb, df1, self.status_bar_callback)
         self.page2 = DataframePanel(nb, df2, self.status_bar_callback)
-        self.page3 = DataframePanel(nb, df3, self.status_bar_callback) 
+        self.page3 = DataframePanel(nb, df3, self.status_bar_callback)
+        self.page4 = DataframePanel(nb, df4, self.status_bar_callback)       
+        
 
         # add the pages to the notebook with the label to show on the tab
         nb.AddPage(self.page1, "Prices")
         nb.AddPage(self.page2, "Portfolio")
         nb.AddPage(self.page3, "Trades")
+        nb.AddPage(self.page4, "Rethinkdb")
+        
 
         nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_tab_change)
-        # finally, put the notebook in a sizer for the panel to manage
-        # the layout
+        
+        
         sizer = wx.BoxSizer()
         sizer.Add(nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
-        self.SetSize((800, 600))
-        self.Center()
+
         
+        
+
+        #wx.CallLater(3000, self.timer)
+        self.Show()
+        
+        
+
     def on_tab_change(self, event):
         #self.page2.list_box.SetFocus()
         page_to_select = event.GetSelection()
-        wx.CallAfter(self.fix_focus, page_to_select)
+        #wx.CallAfter(self.fix_focus, page_to_select)
+
         event.Skip(True)
 
     def fix_focus(self, page_to_select):
@@ -324,17 +367,15 @@ class MainFrame(wx.Frame):
     def status_bar_callback(self, i, new_text):
         self.SetStatusText(new_text, i)
 
-    def selection_change_callback(self):
-        self.page4.redraw()
-        self.page5.redraw()
+    
 
 
-def show(df1, df2, df3):
+def show():
     """
     The main function to start the data frame GUI.
     """
 
     app = wx.App(False)
-    frame = MainFrame(df1, df2, df3)
+    frame = MainFrame()
     frame.Show()
     app.MainLoop()

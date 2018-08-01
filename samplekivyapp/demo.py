@@ -16,8 +16,8 @@ import pandas as pd
 import numpy as np
 import dfgui
 
-df1 = pd.DataFrame({'symbol': ['a','b','c'], 'close': [100, 120, 90]})
-df2= pd.DataFrame({'symbol': ['a','b','c'], 'position': [1,2,3]})
-df3 = pd.DataFrame({'symbol': ['a','b','c'], 'qty': [1, -1, 0]})
 
-dfgui.show(df1, df2, df3)
+
+
+
+dfgui.show()
