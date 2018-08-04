@@ -324,7 +324,7 @@ class MainFrame(wx.Frame):
         self.page1 = DataframePanel(nb, df1, self.status_bar_callback)
         self.page2 = DataframePanel(nb, df2, self.status_bar_callback)
         self.page3 = DataframePanel(nb, df3, self.status_bar_callback)
-        self.page4 = DataframePanel(nb, df4, self.status_bar_callback)       
+        self.page4 = DataframePanel(nb, df4, self.status_bar_callback)
         
 
         # add the pages to the notebook with the label to show on the tab
@@ -340,11 +340,11 @@ class MainFrame(wx.Frame):
         sizer = wx.BoxSizer()
         sizer.Add(nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
-
+        self.Layout()
         
         
 
-        #wx.CallLater(3000, self.timer)
+        wx.CallLater(3000, self.timer)
         self.Show()
         
         
@@ -370,12 +370,12 @@ class MainFrame(wx.Frame):
     
 
 
-def show():
+if __name__ == "__main__":
     """
     The main function to start the data frame GUI.
     """
 
-    app = wx.App(False)
+    app = wx.App()
     frame = MainFrame()
     frame.Show()
     app.MainLoop()
