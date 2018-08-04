@@ -70,7 +70,7 @@ class PageOne(wx.Panel):
         self.Layout()
         self.Show()
         
-        wx.CallLater(3000, self.timer)
+        wx.CallLater(5000, self.timer)
         
     def exit(self, event):
         self.Destroy()
@@ -97,7 +97,7 @@ class PageTwo(wx.Panel):
         self.Layout()
         self.Show()
         
-        wx.CallLater(3000, self.timer)
+        wx.CallLater(5000, self.timer)
         
     def exit(self, event):
         self.Destroy()
@@ -124,7 +124,7 @@ class PageThree(wx.Panel):
         self.Layout()
         self.Show()
         
-        wx.CallLater(3000, self.timer)
+        wx.CallLater(5000, self.timer)
         
     def exit(self, event):
         self.Destroy()
@@ -155,7 +155,7 @@ class PageFour(wx.Panel):
         self.Layout()
         self.Show()
         
-        wx.CallLater(3000, self.timer)
+        wx.CallLater(5000, self.timer)
         
     def exit(self, event):
         self.Destroy()
@@ -164,25 +164,25 @@ class PageFour(wx.Panel):
 
 class MainFrame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Simple Notebook Example")
+        wx.Frame.__init__(self, None, title="Read and Refresh every 5 seconds")
 
-        # Here we create a panel and a notebook on the panel
+        
         p = wx.Panel(self)
         nb = wx.Notebook(p)
 
-        # create the page windows as children of the notebook
+        
         page1 = PageOne(nb)
         page2 = PageTwo(nb)
         page3 = PageThree(nb)
         page4 = PageFour(nb)
 
-        # add the pages to the notebook with the label to show on the tab
+        
         nb.AddPage(page1, "Prices")
         nb.AddPage(page2, "Portfolio")
         nb.AddPage(page3, "Trades")
         nb.AddPage(page4, "Rethinkdb")
-        # finally, put the notebook in a sizer for the panel to manage
-        # the layout
+
+    
         sizer = wx.BoxSizer()
         sizer.Add(nb, 1, wx.EXPAND)
         p.SetSizer(sizer)
