@@ -4,12 +4,9 @@ import subprocess
 import threading
 
 
-def insert():
-    threading.Timer(5.0, insert).start()
-    conn = r.connect(host='localhost', port=28015, db='python_tutorial')
-    r.table("csvfile").delete().run(conn)
-    subprocess.run('rethinkdb import -f /Users/raedzorkot/Desktop/pythontestodes/Workbook1.csv --format csv --table python_tutorial.csvfile --force', shell=True)
-    
 
-insert()
+
+conn = r.connect(host='localhost', port=28015, db='readcsv')#database name inside db
+
+subprocess.run('rethinkdb import -f /Users/raedzorkot/Desktop/pythontestodes/Workbook1.csv --format csv --table readcsv.csvfile --force', shell=True)#to repopulate the table from the csv file into db.table
 

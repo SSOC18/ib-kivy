@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import wx.grid
 import rethinkdb as r
+import threading
 EVEN_ROW_COLOUR = '#CCE6FF'
 GRID_LINE_COLOUR = '#ccc'
 
@@ -54,7 +55,6 @@ class PageOne(wx.Panel):
         
         self.timer()
     def timer(self):
-        s=str(random.randint(0, 100))
         df = pd.read_csv("/Users/raedzorkot/Desktop/pythontestodes/Workbook1.csv")
         table = DataTable(df)
 
@@ -81,23 +81,23 @@ class PageTwo(wx.Panel):
         
         self.timer()
     def timer(self):
-        s=str(random.randint(0, 100))
-        df = pd.DataFrame({'symbol': ['a','b','c'], 'position': [s,2,3]})
+        df = pd.read_csv("/Users/raedzorkot/Desktop/pythontestodes/Workbook2.csv")
         table = DataTable(df)
-
+        
         grid = wx.grid.Grid(self, -1)
         grid.SetTable(table, takeOwnership=True)
         grid.AutoSizeColumns()
-
+        
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(grid, 1, wx.EXPAND)
         self.SetSizer(sizer)
-
+        
         self.Bind(wx.EVT_CLOSE, self.exit)
         self.Layout()
         self.Show()
         
         wx.CallLater(5000, self.timer)
+
         
     def exit(self, event):
         self.Destroy()
@@ -108,18 +108,17 @@ class PageThree(wx.Panel):
         
         self.timer()
     def timer(self):
-        s=str(random.randint(0, 100))
-        df = pd.DataFrame({'symbol': ['a','b','c'], 'qty': [1, -1, 0]})
+        df = pd.read_csv("/Users/raedzorkot/Desktop/pythontestodes/Workbook3.csv")
         table = DataTable(df)
-
+        
         grid = wx.grid.Grid(self, -1)
         grid.SetTable(table, takeOwnership=True)
         grid.AutoSizeColumns()
-
+        
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(grid, 1, wx.EXPAND)
         self.SetSizer(sizer)
-
+        
         self.Bind(wx.EVT_CLOSE, self.exit)
         self.Layout()
         self.Show()
@@ -132,30 +131,63 @@ class PageThree(wx.Panel):
 class PageFour(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        
         self.timer()
+        self.timer1()
     def timer(self):
-        conn = r.connect(host='localhost', port=28015, db='python_tutorial')
-        cursor = r.table("csvfile").pluck("name", "price").run(conn)
+        self.conn = r.connect(host='localhost', port=28015, db='readcsv')
+        cursor = r.table("csvfile").pluck("name", "price").run(self.conn)
         res = []
         for document in cursor:
             res.append(document)
         df = pd.DataFrame(res);
-        table = DataTable(df)
-
-        grid = wx.grid.Grid(self, -1)
-        grid.SetTable(table, takeOwnership=True)
-        grid.AutoSizeColumns()
-
+        self.table = DataTable(df)
+        
+        self.grid = wx.grid.Grid(self, -1)
+        self.grid.SetTable(self.table, takeOwnership=True)
+        self.grid.AutoSizeColumns()
+        
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(grid, 1, wx.EXPAND)
+        sizer.Add(self.grid, 1, wx.EXPAND)
         self.SetSizer(sizer)
-
+        
         self.Bind(wx.EVT_CLOSE, self.exit)
         self.Layout()
         self.Show()
         
-        wx.CallLater(5000, self.timer)
+        
+
+    def timer1(self):
+        
+        feed = r.table('csvfile').pluck("name", "price").changes().pluck("new_val").run(self.conn)
+        
+        self.res1 = []
+        def x():
+            i=0
+            
+            for row in feed:
+
+                self.res1=[]
+                cursor = r.table("csvfile").pluck("name", "price").run(self.conn)
+                for document in cursor:
+                    self.res1.append(document)
+                df = pd.DataFrame(self.res1)
+                self.table = DataTable(df)
+                self.grid = wx.grid.Grid(self, -1)
+                self.grid.SetTable(self.table, takeOwnership=True)
+                self.grid.AutoSizeColumns()
+
+                sizer = wx.BoxSizer(wx.VERTICAL)
+                sizer.Add(self.grid, 1, wx.EXPAND)
+                self.SetSizer(sizer)
+                self.Bind(wx.EVT_CLOSE, self.exit)
+                self.Layout()
+                self.Show()
+        
+            
+            return 1
+        threading.Thread(target=x).start()
+    
+
         
     def exit(self, event):
         self.Destroy()
